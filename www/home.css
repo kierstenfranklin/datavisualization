@@ -1,3 +1,11 @@
-h1{
+h1 {
     color: red;
+}
+navbar-default {
+    background-color: #5DFDCB;
+}
+#map {
+    height: 500px !important;
+    display: inherit !important;
+    width: 100%;
 }

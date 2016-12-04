@@ -1,20 +1,116 @@
 <!doctype html>
 
-<html lang="en">
+<html lang="en" ng-app="dataVisualization">
 <head>
-  <meta charset="utf-8">
+    <meta charset="utf-8">
 
-  <title>Data Visualization</title>
-  <meta name="description" content="Data Visualization Project">
-  <meta name="author" content="Kiersten Franklin">
+    <title>Data Visualization</title>
+    <meta name="description" content="Data Visualization Project">
+    <meta name="author" content="Kiersten Franklin">
 
-  <link rel="stylesheet" href="home.css">
+    <!--- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
+    <link rel="stylesheet" href="home.css">
+
+    <!-- jQuery -->
+    <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+    <!-- Bootstrap: Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRhiu10xU6yOUBWMdLLwgD6QWuP7UAHBc&libraries=visualization">
+    </script>
+
+    <script src="app.js"></script>
+    <script src="home.js"></script>
+    <script src="data/dataController.js"></script>
+    <script src="mapDirective.js"></script>
+
 
 </head>
 
 <body>
-  <script src="js/scripts.js"></script>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid navbar-header">
+            <a class="navbar-brand">Data Visualization</a>
+        </div>
+    </nav>
+    <div ng-controller="dataController">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-7">
+                    <map-directive ng-if="crimes"
+                                    id="map"
+                                    neighborhood="neighborhood"
+                                    crime-type="crimeType"
+                                    crimes="crimes"
+                                    time-filter="timeFilter">
+                    </map-directive>
+                </div>
+                <div class = "dropdown col-md-5">
+                    <h4>Filter Results: </h4>
+                    <div class="dropdown">
+                        <h5>Neighborhood: </h5>
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {{neighborhood.name}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="#" ng-repeat="neighborhood in neighborhoods" ng-click="setNeighborhood(neighborhood)">{{neighborhood.name}}</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <h5>Type of Crime: </h5>
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {{crimeType}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <li><a href="#" ng-repeat="crimeType in crimeTypes" ng-click="setCrimeType(crimeType)">{{crimeType}}</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <h5>Time: </h5>
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {{timeFilter}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                            <li><a href="#" ng-repeat="timeFilter in timeFilters" ng-click="setTimeFilter(timeFilter)">{{timeFilter}}</a></li>
+                        </ul>
+                        <input type="time" ng-if="timeFilter!='all'" ng-model="time"></input>
+                    </div>
 
-  <h1>Success</h1>
-</body>
-</html>
+                    </div>
+
+                </div>
+                <table class="table table-striped" >
+                    <thead>
+                        <tr>
+                            <th>Crime Type</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Address</th>
+                            <th>Neighborhood</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="crime in crimes | limitTo: 10">
+                            <td>{{crime[12]}}</td>
+                            <td>{{crime[8]}}</td>
+                            <td>{{crime[9]}}</td>
+                            <td>{{crime[11]}}</td>
+                            <td>{{crime[16]}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+        </body>
+        </html>
