@@ -6,7 +6,10 @@ angular.module('dataVisualization')
             crimes: '=',
             neighborhood: '=',
             crimeType: '=',
-            timeFilter: '='
+            timeFilter: '=',
+            time: '=',
+            changeGradient: '=',
+            updateMethod: '='
         },
         template: '<div></div>',
         link: function (scope, element, attrs) {
@@ -16,7 +19,16 @@ angular.module('dataVisualization')
             });
             scope.$watch("crimeType", function(newValue,oldValue){
                 initMap();
-            })
+            });
+            scope.$watch("timeFilter", function(newValue, oldValue){
+                initMap();
+            });
+            scope.$watch("time", function(newValue, oldValue){
+                initMap();
+            });
+            scope.$watch("changeGradient", function(newValue, oldValue){
+                initMap();
+            });
             var map, heatmap;
 
             function initMap() {
@@ -38,6 +50,26 @@ angular.module('dataVisualization')
                     data: getPoints(),
                     map: map
                 });
+                if(scope.changeGradient === true){
+                    var gradient = [
+                        'rgba(0, 255, 255, 0)',
+                        'rgba(0, 255, 255, 1)',
+                        'rgba(0, 191, 255, 1)',
+                        'rgba(0, 127, 255, 1)',
+                        'rgba(0, 63, 255, 1)',
+                        'rgba(0, 0, 255, 1)',
+                        'rgba(0, 0, 223, 1)',
+                        'rgba(0, 0, 191, 1)',
+                        'rgba(0, 0, 159, 1)',
+                        'rgba(0, 0, 127, 1)',
+                        'rgba(63, 0, 91, 1)',
+                        'rgba(127, 0, 63, 1)',
+                        'rgba(191, 0, 31, 1)',
+                        'rgba(255, 0, 0, 1)'
+                    ]
+                    heatmap.set('gradient', gradient);
+
+                }
                 heatmap.set('radius', radius);
 
             }
@@ -45,26 +77,26 @@ angular.module('dataVisualization')
 
             function getPoints() {
                 var points = [];
+                var selectedCrimes = [];
                 var selectedNeighborhood = scope.neighborhood.name;
-                console.log("selected neighboorhood" + selectedNeighborhood);
                 var selectedCrimeType = scope.crimeType;
-                console.log("type " + selectedCrimeType);
                 for(var i = 0; i < scope.crimes.length; i++){
-                    if(scope.crimes[i][16] === selectedNeighborhood && scope.crimes[i][12] === selectedCrimeType ||
-                        selectedNeighborhood === 'All' && scope.crimes[i][12] === selectedCrimeType ||
-                        scope.crimes[i][16] === selectedNeighborhood && selectedCrimeType === "ALL" ||
-                        selectedNeighborhood === 'All' && selectedCrimeType === "ALL"){
-                        var latitude = scope.crimes[i][17][1];
-
-                        var longitude = scope.crimes[i][17][2];
-                        if(latitude && longitude){
-                            latitude = latitude.substring(0,6);
-                            longitude = longitude.substring(0,7);
-                            points.push(new google.maps.LatLng(latitude, longitude));
+                    if(selectedNeighborhood === 'All' || scope.crimes[i][16] === selectedNeighborhood){
+                        if(selectedCrimeType === 'ALL' || scope.crimes[i][12] === selectedCrimeType){
+                            if(scope.timeFilter === 'all' || scope.timeFilter === 'before' && scope.time > scope.crimes[i][9] || scope.timeFilter === 'after' && scope.time < scope.crimes[i][9]){
+                                selectedCrimes.push(scope.crimes[i]);
+                                var latitude = scope.crimes[i][17][1];
+                                var longitude = scope.crimes[i][17][2];
+                                if(latitude && longitude){
+                                    latitude = latitude.substring(0,6);
+                                    longitude = longitude.substring(0,7);
+                                    points.push(new google.maps.LatLng(latitude, longitude));
+                                }
+                            }
                         }
                     }
-
                 }
+                scope.updateMethod(selectedCrimes);
                 return points;
             }
 

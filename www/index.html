@@ -37,7 +37,7 @@
 <body>
     <nav class="navbar navbar-default">
         <div class="container-fluid navbar-header">
-            <a class="navbar-brand">Data Visualization</a>
+            <a class="navbar-brand">Baltimore Violent Crimes: December 2015 - November 2016</a>
         </div>
     </nav>
     <div ng-controller="dataController">
@@ -45,72 +45,93 @@
             <div class="row">
                 <div class="col-md-7">
                     <map-directive ng-if="crimes"
-                                    id="map"
-                                    neighborhood="neighborhood"
-                                    crime-type="crimeType"
-                                    crimes="crimes"
-                                    time-filter="timeFilter">
-                    </map-directive>
+                    id="map"
+                    neighborhood="neighborhood"
+                    crime-type="crimeType"
+                    crimes="crimes"
+                    time-filter="timeFilter",
+                    time = "time.value | date: 'HH:mm:ss'",
+                    change-gradient = "changeGradient",
+                    update-method="updateCrimes">
+                </map-directive>
+            </div>
+            <div class = "dropdown col-md-5">
+                <h4>Filter Results: </h4>
+                <div class="dropdown">
+                    <h5>Neighborhood: </h5>
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        {{neighborhood.name}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a href="#" ng-repeat="neighborhood in neighborhoods" ng-click="setNeighborhood(neighborhood)">{{neighborhood.name}}</a></li>
+                    </ul>
                 </div>
-                <div class = "dropdown col-md-5">
-                    <h4>Filter Results: </h4>
-                    <div class="dropdown">
-                        <h5>Neighborhood: </h5>
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            {{neighborhood.name}}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li><a href="#" ng-repeat="neighborhood in neighborhoods" ng-click="setNeighborhood(neighborhood)">{{neighborhood.name}}</a></li>
-                        </ul>
-                    </div>
-                    <div class="dropdown">
-                        <h5>Type of Crime: </h5>
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            {{crimeType}}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                            <li><a href="#" ng-repeat="crimeType in crimeTypes" ng-click="setCrimeType(crimeType)">{{crimeType}}</a></li>
-                        </ul>
-                    </div>
-                    <div class="dropdown">
-                        <h5>Time: </h5>
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            {{timeFilter}}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
-                            <li><a href="#" ng-repeat="timeFilter in timeFilters" ng-click="setTimeFilter(timeFilter)">{{timeFilter}}</a></li>
-                        </ul>
-                        <input type="time" ng-if="timeFilter!='all'" ng-model="time"></input>
-                    </div>
-
-                    </div>
-
+                <div class="dropdown">
+                    <h5>Type of Crime: </h5>
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        {{crimeType}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                        <li><a href="#" ng-repeat="crimeType in crimeTypes" ng-click="setCrimeType(crimeType)">{{crimeType}}</a></li>
+                    </ul>
                 </div>
-                <table class="table table-striped" >
-                    <thead>
-                        <tr>
-                            <th>Crime Type</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Address</th>
-                            <th>Neighborhood</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="crime in crimes | limitTo: 10">
-                            <td>{{crime[12]}}</td>
-                            <td>{{crime[8]}}</td>
-                            <td>{{crime[9]}}</td>
-                            <td>{{crime[11]}}</td>
-                            <td>{{crime[16]}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="dropdown">
+                    <h5>Time: </h5>
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        {{timeFilter}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                        <li><a href="#" ng-repeat="timeFilter in timeFilters" ng-click="setTimeFilter(timeFilter)">{{timeFilter}}</a></li>
+                    </ul>
+                    <input type="time" ng-if="timeFilter!='all'" ng-model="time.value">
+                </div>
+                <button type="button" class="btn btn-default" ng-click="setChangeGradient(!changeGradient)">Toggle Gradient Color</button>
+                <p>Total Crimes Reported: {{selectedCrimes.length}}</p>
             </div>
 
+        </div>
+    </div>
+    <table class="table table-striped table-condensed table-hover" >
+        <thead>
+            <tr>
+                <th>Crime Type</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Address</th>
+                <th>Neighborhood</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr  ng-repeat="selectedCrime in selectedCrimes | pagination: curPage * pageSize | limitTo: pageSize" >
+                <td>{{selectedCrime[12]}}</td>
+                <td>{{selectedCrime[8]}}</td>
+                <td>{{selectedCrime[9]}}</td>
+                <td>{{selectedCrime[11]}}</td>
+                <td>{{selectedCrime[16]}}</td>
+            </tr>
+        </tbody>
 
-        </body>
-        </html>
+    </table>
+
+    <nav aria-label="Page navigation" class="pageNumbering">
+        <ul class="pagination">
+            <li ng-click="prevPage()">
+                <a href aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li><a href >Page {{curPage + 1}} of {{ numberOfPages() }}</a></li>
+            <li ng-click="nextPage()">
+                <a href aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+</body>
+</html>
