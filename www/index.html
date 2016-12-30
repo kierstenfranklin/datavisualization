@@ -55,46 +55,54 @@
                     update-method="updateCrimes">
                 </map-directive>
             </div>
-            <div class = "dropdown col-md-5">
-                <h4>Filter Results: </h4>
-                <div class="dropdown">
-                    <h5>Neighborhood: </h5>
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        {{neighborhood.name}}
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a href="#" ng-repeat="neighborhood in neighborhoods" ng-click="setNeighborhood(neighborhood)">{{neighborhood.name}}</a></li>
-                    </ul>
+            <div class = "col-md-5">
+                <div class="description-map">
+                    <h4>Concentration of Violent Crime in Baltimore</h4>
+                    <p>This map shows the distribution of violent crime in Baltimore from December 2015 through November 2016.  Areas with a higher concentration of
+                    crimes appear in red, and areas with a lower concentration are seen in green.  Use the filters below to narrow the crimes by neighborhood, type of crime, or time of day.</p>
+                    <p>Total Crimes Reported: {{selectedCrimes.length}}</p>
                 </div>
-                <div class="dropdown">
-                    <h5>Type of Crime: </h5>
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        {{crimeType}}
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                        <li><a href="#" ng-repeat="crimeType in crimeTypes" ng-click="setCrimeType(crimeType)">{{crimeType}}</a></li>
-                    </ul>
+                <div class="filters">
+                    <h4>Filter Results: </h4>
+                    <div class="dropdown">
+                        <h5 class="inline-element">Neighborhood: </h5>
+                        <button class="btn btn-default dropdown-toggle inline-element" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {{neighborhood.name}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="#" ng-repeat="neighborhood in neighborhoods" ng-click="setNeighborhood(neighborhood)">{{neighborhood.name}}</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <h5 class="inline-element">Type of Crime: </h5>
+                        <button class="btn btn-default dropdown-toggle inline-element" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {{crimeType}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <li><a href="#" ng-repeat="crimeType in crimeTypes" ng-click="setCrimeType(crimeType)">{{crimeType}}</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <h5 class="inline-element">Time: </h5>
+                        <button class="btn btn-default dropdown-toggle inline-element" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {{timeFilter}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                            <li><a href="#" ng-repeat="timeFilter in timeFilters" ng-click="setTimeFilter(timeFilter)">{{timeFilter}}</a></li>
+                        </ul>
+                        <input type="time" ng-if="timeFilter!='All'" ng-model="time.value" required>
+                    </div>
+                    <!---<button type="button" class="btn btn-default" ng-click="setChangeGradient(!changeGradient)">Toggle Gradient Color</button> --->
+                    <button type="button" class="btn btn-default" ng-click="setDefault()">Reset Filters</button>
                 </div>
-                <div class="dropdown">
-                    <h5>Time: </h5>
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        {{timeFilter}}
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
-                        <li><a href="#" ng-repeat="timeFilter in timeFilters" ng-click="setTimeFilter(timeFilter)">{{timeFilter}}</a></li>
-                    </ul>
-                    <input type="time" ng-if="timeFilter!='all'" ng-model="time.value">
-                </div>
-                <button type="button" class="btn btn-default" ng-click="setChangeGradient(!changeGradient)">Toggle Gradient Color</button>
-                <p>Total Crimes Reported: {{selectedCrimes.length}}</p>
             </div>
 
         </div>
     </div>
-    <table class="table table-striped table-condensed table-hover" >
+    <table class="table table-striped table-condensed table-hover data-table" >
         <thead>
             <tr>
                 <th>Crime Type</th>
@@ -107,7 +115,7 @@
         <tbody>
             <tr  ng-repeat="selectedCrime in selectedCrimes | pagination: curPage * pageSize | limitTo: pageSize" >
                 <td>{{selectedCrime[12]}}</td>
-                <td>{{selectedCrime[8]}}</td>
+                <td>{{selectedCrime[8].substring(0, 10)}}</td>
                 <td>{{selectedCrime[9]}}</td>
                 <td>{{selectedCrime[11]}}</td>
                 <td>{{selectedCrime[16]}}</td>

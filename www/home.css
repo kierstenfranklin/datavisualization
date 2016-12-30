@@ -8,3 +8,13 @@
     flex-direction: row;
     justify-content: center;
 }
+.data-table{
+    margin-top: 50px;
+}
+.inline-element{
+    display: inline-block;
+    margin-bottom: 20px;
+}
+.filters{
+    margin-top: 60px;
+}

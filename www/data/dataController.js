@@ -13,18 +13,25 @@ angular.module('crimeData', [])
     $scope.curPage = 0;
     $scope.pageSize = 10;
 
-    $scope.crimeTypes = ["ALL", "AGG. ASSAULT", "ARSON", "ASSAULT BY THREAT", "AUTO THEFT", "BURGLARY", "COMMON ASSAULT", "HOMICIDE", "LARCENY", "LARCENY FROM AUTO", "RAPE", "ROBBERY - CARJACKING", "ROBBERY - COMMERCIAL", "ROBBERY - RESIDENCE", "ROBBERY - STREET", "SHOOTING"];
+    $scope.crimeTypes = ["All", "Agg. Assault", "Arson", "Assault By Threat", "Auto Theft", "Burglary", "Common Assault", "Homicide", "Larceny", "Larceny from Auto", "Rape", "Robbery - Carjacking", "Robbery - Commercial", "Robbery - Residence", "Robbery - Street", "Shooting"];
     $scope.crimeType = $scope.crimeTypes[0];
-    $scope.timeFilters = ["all", "before", "after"];
+    $scope.timeFilters = ["All", "Before", "After"];
     $scope.timeFilter = $scope.timeFilters[0];
     $scope.changeGradient = false;
 
     $scope.time = {};
 
+    $scope.setDefault=function(){
+        $scope.neighborhood = $scope.neighborhoods[0];
+        $scope.crimeType = $scope.crimeTypes[0];
+        $scope.timeFilter = $scope.timeFilters[0];
+    }
+
     $scope.setNeighborhood=function(neighborhood){
         $scope.neighborhood = neighborhood;
     }
     $scope.setCrimeType=function(crimeType){
+        //crimeType = crimeType.toUpperCase();
         $scope.crimeType = crimeType;
     }
     $scope.setTimeFilter=function(timeFilter){

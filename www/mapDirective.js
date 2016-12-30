@@ -79,11 +79,11 @@ angular.module('dataVisualization')
                 var points = [];
                 var selectedCrimes = [];
                 var selectedNeighborhood = scope.neighborhood.name;
-                var selectedCrimeType = scope.crimeType;
+                var selectedCrimeType = scope.crimeType.toUpperCase();
                 for(var i = 0; i < scope.crimes.length; i++){
                     if(selectedNeighborhood === 'All' || scope.crimes[i][16] === selectedNeighborhood){
                         if(selectedCrimeType === 'ALL' || scope.crimes[i][12] === selectedCrimeType){
-                            if(scope.timeFilter === 'all' || scope.timeFilter === 'before' && scope.time > scope.crimes[i][9] || scope.timeFilter === 'after' && scope.time < scope.crimes[i][9]){
+                            if(scope.timeFilter === 'All' || scope.timeFilter === 'Before' && scope.time > scope.crimes[i][9] || scope.timeFilter === 'After' && scope.time < scope.crimes[i][9]){
                                 selectedCrimes.push(scope.crimes[i]);
                                 var latitude = scope.crimes[i][17][1];
                                 var longitude = scope.crimes[i][17][2];
