@@ -4,11 +4,8 @@ angular.module('crimeData', [])
     $http.get('data/data.json').then(function(result){
         $scope.crimes = result.data.data;
         $scope.selectedCrimes = $scope.crimes;
-
-        $scope.numberOfPages = function(){
-            return Math.ceil($scope.selectedCrimes.length / $scope.pageSize);
-        };
         $scope.selectedCrimesPerDay = [];
+
         for(var i = 0; i< $scope.crimes.length; i++){
             if($scope.selectedCrimesPerDay[$scope.crimes[i][8]]){
                 $scope.selectedCrimesPerDay[$scope.crimes[i][8]]++;
@@ -17,10 +14,9 @@ angular.module('crimeData', [])
                 $scope.selectedCrimesPerDay[$scope.crimes[i][8]]++;
             }
         }
-        console.log('HERE', $scope.selectedCrimesPerDay);
     });
-    $scope.curPage = 0;
-    $scope.pageSize = 10;
+    $scope.curPage = {};
+    $scope.curPage.value = 0;
 
     $scope.crimeTypes = ["All", "Agg. Assault", "Arson", "Assault By Threat", "Auto Theft", "Burglary", "Common Assault", "Homicide", "Larceny", "Larceny from Auto", "Rape", "Robbery - Carjacking", "Robbery - Commercial", "Robbery - Residence", "Robbery - Street", "Shooting"];
     $scope.crimeType = $scope.crimeTypes[0];
@@ -38,10 +34,9 @@ angular.module('crimeData', [])
 
     $scope.setNeighborhood=function(neighborhood){
         $scope.neighborhood = neighborhood;
-        
+
     }
     $scope.setCrimeType=function(crimeType){
-        //crimeType = crimeType.toUpperCase();
         $scope.crimeType = crimeType;
     }
     $scope.setTimeFilter=function(timeFilter){
@@ -51,7 +46,7 @@ angular.module('crimeData', [])
         $scope.changeGradient = changeGradient;
     }
     $scope.updateCrimes=function(selectedCrimes){
-        $scope.curPage=0;
+        $scope.curPage.value=0;
         $scope.selectedCrimes = selectedCrimes;
         var selectedTime = $filter('date')($scope.time.value, "HH:mm:ss");
         var selectedNeighborhood = $scope.neighborhood.name;
@@ -86,10 +81,6 @@ angular.module('crimeData', [])
 
     }
 
-
-
-
-
     $scope.neighborhoods = [{name: "All", lat: 39.294720, long: -76.6058617},
     {name: "Canton", lat: 39.281637, long: -76.5758397},
     {name: "Central Park Heights", lat:39.343224, long: -76.6716077},
@@ -105,28 +96,4 @@ angular.module('crimeData', [])
     {name: "Woodberry", lat:39.335142, long:-76.6536797 }];
     $scope.neighborhood= $scope.neighborhoods[0];
 
-    $scope.prevPage=function(){
-        if($scope.curPage != 0){
-        $scope.curPage=$scope.curPage-1;
-        }
-    }
-    $scope.nextPage=function(){
-        console.log($scope.selectedCrimes.length/$scope.pageSize - 1);
-        if($scope.curPage < $scope.selectedCrimes.length/$scope.pageSize - 1){
-
-            $scope.curPage = $scope.curPage+1;
-        }
-    }
-
-
-
-
-    })
-.filter('pagination', function(){
-     return function(input, start){
-      start = +start;
-      if(input){
-          return input.slice(start);
-      }
-     };
- });
+})
