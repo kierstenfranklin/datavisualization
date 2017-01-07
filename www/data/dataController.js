@@ -1,5 +1,5 @@
 angular.module('crimeData', [])
-.controller('dataController', function($scope, $http){
+.controller('dataController', function($scope, $http, $filter){
 
     $http.get('data/data.json').then(function(result){
         $scope.crimes = result.data.data;
@@ -8,7 +8,16 @@ angular.module('crimeData', [])
         $scope.numberOfPages = function(){
             return Math.ceil($scope.selectedCrimes.length / $scope.pageSize);
         };
-
+        $scope.selectedCrimesPerDay = [];
+        for(var i = 0; i< $scope.crimes.length; i++){
+            if($scope.selectedCrimesPerDay[$scope.crimes[i][8]]){
+                $scope.selectedCrimesPerDay[$scope.crimes[i][8]]++;
+            }else{
+                $scope.selectedCrimesPerDay[$scope.crimes[i][8]] = 0;
+                $scope.selectedCrimesPerDay[$scope.crimes[i][8]]++;
+            }
+        }
+        console.log('HERE', $scope.selectedCrimesPerDay);
     });
     $scope.curPage = 0;
     $scope.pageSize = 10;
@@ -29,6 +38,7 @@ angular.module('crimeData', [])
 
     $scope.setNeighborhood=function(neighborhood){
         $scope.neighborhood = neighborhood;
+        
     }
     $scope.setCrimeType=function(crimeType){
         //crimeType = crimeType.toUpperCase();
@@ -43,7 +53,41 @@ angular.module('crimeData', [])
     $scope.updateCrimes=function(selectedCrimes){
         $scope.curPage=0;
         $scope.selectedCrimes = selectedCrimes;
+        var selectedTime = $filter('date')($scope.time.value, "HH:mm:ss");
+        var selectedNeighborhood = $scope.neighborhood.name;
+        var selectedCrimeType = $scope.crimeType.toUpperCase();
+        $scope.selectedCrimesPerDay = [];
+        $scope.selectedCrimes = [];
+        $scope.points = [];
+        for(var i = 0; i< $scope.crimes.length; i++){
+            //console.log($scope.timeFilter + "time: " + $scope.time + "compared to " + $scope.crimes[i][9]  )
+        if(selectedNeighborhood === 'All' || $scope.crimes[i][16] === selectedNeighborhood){
+            if(selectedCrimeType === 'ALL' || $scope.crimes[i][12] === selectedCrimeType){
+                if($scope.timeFilter === 'All' || $scope.timeFilter === 'Before' && selectedTime > $scope.crimes[i][9] || $scope.timeFilter === 'After' && selectedTime < $scope.crimes[i][9]){
+                    //console.log("found");
+                    if($scope.selectedCrimesPerDay[$scope.crimes[i][8]]){
+                        $scope.selectedCrimesPerDay[$scope.crimes[i][8]]++;
+                    }else{
+                        $scope.selectedCrimesPerDay[$scope.crimes[i][8]] = 0;
+                        $scope.selectedCrimesPerDay[$scope.crimes[i][8]]++;
+                    }
+                    $scope.selectedCrimes.push($scope.crimes[i]);
+                    var latitude = $scope.crimes[i][17][1];
+                    var longitude = $scope.crimes[i][17][2];
+                    if(latitude && longitude){
+                        latitude = latitude.substring(0,6);
+                        longitude = longitude.substring(0,7);
+                        $scope.points.push(new google.maps.LatLng(latitude, longitude));
+                    }
+                }
+            }
+        }
     }
+
+    }
+
+
+
 
 
     $scope.neighborhoods = [{name: "All", lat: 39.294720, long: -76.6058617},
@@ -68,7 +112,7 @@ angular.module('crimeData', [])
     }
     $scope.nextPage=function(){
         console.log($scope.selectedCrimes.length/$scope.pageSize - 1);
-        if($scope.curPage <= $scope.selectedCrimes.length/$scope.pageSize - 1){
+        if($scope.curPage < $scope.selectedCrimes.length/$scope.pageSize - 1){
 
             $scope.curPage = $scope.curPage+1;
         }

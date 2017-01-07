@@ -18,3 +18,18 @@
 .filters{
     margin-top: 60px;
 }
+#chart{
+	background-color: #F5F2EB;
+	border: 1px solid #CCC;
+}
+.trendline{
+    fill:none;
+    stroke: #ccc;
+    stroke-width: 3px;
+}
+.area{
+    opacity: 0.25;
+    fill: #ccc;
+    stroke: #ccc;
+    stroke-width: 1px;
+}
