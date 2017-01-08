@@ -33,3 +33,7 @@
     stroke: #ccc;
     stroke-width: 1px;
 }
+.caret.caret-reversed {
+    border-top-width: 0;
+    border-bottom: 4px solid #000000;
+}

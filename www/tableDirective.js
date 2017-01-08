@@ -9,6 +9,8 @@ angular.module("dataVisualization")
             },
             templateUrl: "tableDirective.html",
             link: function(scope){
+                scope.sortType ='';
+                scope.sortReverse = true;
                 scope.prevPage = function(){
                     if(scope.curPage.value != 0){
                         scope.curPage.value=scope.curPage.value-1;

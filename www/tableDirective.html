@@ -2,15 +2,45 @@
 <table class="table table-striped table-condensed table-hover data-table" >
     <thead>
         <tr>
-            <th>Crime Type</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Address</th>
-            <th>Neighborhood</th>
+            <th>
+                <a href="" ng-click="sortType = '[12]'; sortReverse = !sortReverse;">
+                    Crime Type
+                <span ng-show="sortType == '[12]' && sortReverse" class="caret caret-reversed"></span>
+                <span ng-show="sortType == '[12]' && !sortReverse" class="caret"></span>
+                </a>
+            </th>
+            <th>
+                <a href="" ng-click="sortType = '[8]'; sortReverse = !sortReverse;">
+                    Date
+                <span ng-show="sortType == '[8]' && sortReverse" class="caret caret-reversed"></span>
+                <span ng-show="sortType == '[8]' && !sortReverse" class="caret"></span>
+                </a>
+            </th>
+            <th>
+                <a href="" ng-click="sortType = '[9]'; sortReverse = !sortReverse;">
+                    Time
+                <span ng-show="sortType == '[9]' && sortReverse" class="caret caret-reversed"></span>
+                <span ng-show="sortType == '[9]' && !sortReverse" class="caret"></span>
+                </a>
+            </th>
+            <th>
+                <a href="" ng-click="sortType = '[11]'; sortReverse = !sortReverse;">
+                    Address
+                <span ng-show="sortType == '[11]' && sortReverse" class="caret caret-reversed"></span>
+                <span ng-show="sortType == '[11]' && !sortReverse" class="caret"></span>
+                </a>
+            </th>
+            <th>
+                <a href="" ng-click="sortType = '[16]'; sortReverse = !sortReverse;">
+                    Neighborhood
+                <span ng-show="sortType == '[16]' && sortReverse" class="caret caret-reversed"></span>
+                <span ng-show="sortType == '[16]' && !sortReverse" class="caret"></span>
+                </a>
+            </th>
         </tr>
     </thead>
     <tbody>
-        <tr  ng-repeat="selectedCrime in selectedCrimes | pagination: curPage.value * pageSize | limitTo: pageSize" >
+        <tr  ng-repeat="selectedCrime in selectedCrimes | orderBy: sortType : sortReverse | pagination: curPage.value * pageSize | limitTo: pageSize" >
             <td>{{selectedCrime[12]}}</td>
             <td>{{selectedCrime[8].substring(0, 10)}}</td>
             <td>{{selectedCrime[9]}}</td>

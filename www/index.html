@@ -27,13 +27,13 @@
     </script>
 
     <script src="app.js"></script>
-    <script src="home.js"></script>
     <script src="data/dataController.js"></script>
     <script src="mapDirective.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="graphDirective.js"></script>
     <script src="tableDirective.js"></script>
     <script src="paginationFilter.js"></script>
+    <script src="filterFactory.js"></script>
 
 
 </head>
@@ -48,15 +48,12 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-7">
-                    <map-directive ng-if="crimes"
+                    <map-directive ng-if="points"
                     id="map"
-                    neighborhood="neighborhood"
-                    crime-type="crimeType"
-                    crimes="crimes"
-                    time-filter="timeFilter",
-                    time = "time.value | date: 'HH:mm:ss'",
+                    neighborhood = "neighborhood",
                     change-gradient = "changeGradient",
-                    update-method="updateCrimes">
+                    points = "points"
+                    update-method = "reloadMap">
                 </map-directive>
             </div>
             <div class = "col-md-5">
@@ -99,8 +96,8 @@
                             </ul>
                             <input type="time" ng-if="timeFilter!='All'" ng-model="time.value" required>
                         </div>
-                        <!---<button type="button" class="btn btn-default" ng-click="setChangeGradient(!changeGradient)">Toggle Gradient Color</button> --->
-                        <button type="button" class="btn btn-default" ng-click="setDefault()">Reset Filters</button>
+                        <button type="button" class="btn btn-default" ng-click="setChangeGradient(!changeGradient)">Toggle Gradient Color</button>
+                        <button type="button" class="btn btn-default" ng-click="resetDefault()">Reset Filters</button>
                     </div>
                 </div>
 
