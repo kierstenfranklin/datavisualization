@@ -21,6 +21,9 @@ angular.module("dataVisualization")
                         scope.curPage.value = scope.curPage.value+1;
                     }
                 }
+                scope.getTotalPages = function(){
+                    return Math.ceil(scope.selectedCrimes.length / scope.pageSize);
+                }
             }
         }
     });

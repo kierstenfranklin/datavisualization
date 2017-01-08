@@ -22,6 +22,26 @@
 	background-color: #F5F2EB;
 	border: 1px solid #CCC;
 }
+#chart2{
+    background-color: #F5F2EB;
+	border: 1px solid #CCC;
+    /*position: relative;*/
+}
+#graphWrapper{
+    margin-right: 25px;
+}
+.tooltip{
+    background: #eee;
+    box-shadow: 0 0 5px #999999;
+    color: #333;
+    font-size: 12px;
+    padding: 10px;
+    pointer-events: none;
+    position: relative;
+    text-align: center;
+    width: 90px;
+    z-index: 1000;
+}
 .trendline{
     fill:none;
     stroke: #ccc;

@@ -8,8 +8,9 @@ angular.module('dataVisualization')
         },
         template : '<div></div>',
         link: function(scope, element, attrs){
-            var w = 900;
-            var h = 600;
+            var wrapperDiv = document.getElementById("graphWrapper");
+            var w = wrapperDiv.clientWidth;
+            var h = 500;
             var margin = {
                 top: 58,
                 bottom: 100,
@@ -19,55 +20,34 @@ angular.module('dataVisualization')
             var width = w - margin.left - margin.right;
             var height = h - margin.top - margin.bottom;
 
-            var svg = d3.select("#graph1").append("svg")
-            .attr("id", "chart")
-            //.attr("ng-controller", "dataController")
-            .attr("width", w)
-            .attr("height", h);
+            var svg = d3.select("#graphWrapper").append("svg")
+                .attr("id", "chart")
+                .attr("width", w)
+                .attr("height", h);
             var chart = svg.append("g")
-            .classed("display", true)
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                .classed("display", true)
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
             var dateParser = d3.timeParse("%Y-%m-%dT%H:%M:%S");
-            /*var crimesPerDay = [];
-            for(var i = 0; i< scope.crimes.length; i++){
-                if(crimesPerDay[scope.crimes[i][8]]){
-                    crimesPerDay[scope.crimes[i][8]]++;
-                }else{
-                    crimesPerDay[scope.crimes[i][8]] = 0;
-                    crimesPerDay[scope.crimes[i][8]]++;
-                }
-            }
-            var burglaryPerDay = [];
-            for(var i = 0; i< scope.crimes.length; i++){
-                if(burglaryPerDay[scope.crimes[i][8]] && scope.crimes[i][12] === "BURGLARY"){
-                    burglaryPerDay[scope.crimes[i][8]]++;
-                }else if (scope.crimes[i][12] === "BURGLARY"){
-                    burglaryPerDay[scope.crimes[i][8]] = 0;
-                    burglaryPerDay[scope.crimes[i][8]]++;
-                }
-            }*/
-            //console.log(burglaryPerDay);
+
             var x = d3.scaleTime()
-            .domain(d3.extent(scope.crimes, function(d,i){
-                var date = dateParser(scope.crimes[i][8]);
-                return date;
+                .domain(d3.extent(scope.crimes, function(d,i){
+                    var date = dateParser(scope.crimes[i][8]);
+                    return date;
             }))
-            .range([0, width]);
+                .range([0, width]);
             var y = d3.scaleLinear()
-            .domain([0, d3.max(d3.entries(scope.selectedCrimesPerDay), function(d){
+                .domain([0, d3.max(d3.entries(scope.selectedCrimesPerDay), function(d){
                 return d.value;;
             })])
-            .range([height, 0]);
+                .range([height, 0]);
 
-            console.log(d3.max(d3.entries(scope.selectedCrimesPerDay), function(d){
-                return d.value;
-            }));
             var xAxis = d3.axisBottom()
                 .scale(x)
                 .ticks(12);
             var yAxis = d3.axisLeft()
                 .scale(y)
-                .ticks(6);
+                .ticks(6)
+                .tickFormat(d3.format("d"));
 
             var line = d3.line()
             .x(function(d){
@@ -171,7 +151,17 @@ angular.module('dataVisualization')
                     .style("fill", "black")
             		.attr("transform", "translate(" + width/2 + ",80)")
             		.text("Time (Months)");
+
+                //title
+                this.append("text")
+                    .attr("x", width/2)
+                    .attr("y", 0 - (margin.top / 2))
+                    .attr("text-anchor", "middle")
+                    .style("font-size", "18px")
+                    .style("font-weight", "bold")
+                    .text("Crimes Per Day");
             }
+
 
             plot.call(chart, {
                 data: d3.entries(scope.selectedCrimesPerDay),

@@ -56,7 +56,7 @@
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
-        <li><a href >Page {{curPage.value + 1}} of {{selectedCrimes.length / pageSize | number:0}}</a></li>
+        <li><a href >Page {{curPage.value + 1}} of {{ getTotalPages() | number:0}}</a></li>
         <li ng-click="nextPage()">
             <a href aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>

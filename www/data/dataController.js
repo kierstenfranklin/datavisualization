@@ -5,6 +5,7 @@ angular.module('crimeData', [])
         $scope.crimes = result.data.data;
         $scope.selectedCrimes = $scope.crimes;
         $scope.selectedCrimesPerDay = [];
+        $scope.selectedCrimesMonthly = [];
         $scope.updateCrimes();
     });
     $scope.neighborhoods = filterFactory.getNeighborhoods();
@@ -46,6 +47,10 @@ angular.module('crimeData', [])
     $scope.reloadMap = function(method){
         $scope.reload = method;
     }
+    $scope.checkTime = function() {
+        console.log($scope.time);
+        $scope.updateCrimes();
+    }
     $scope.updateCrimes=function(){
         console.log($scope.neighborhood);
         $scope.curPage.value=0;
@@ -54,6 +59,7 @@ angular.module('crimeData', [])
         var selectedCrimeType = $scope.crimeType.toUpperCase();
         $scope.selectedCrimesPerDay = [];
         $scope.selectedCrimes = [];
+        $scope.selectedCrimesMonthly=[];
         $scope.points = [];
         for(var i = 0; i< $scope.crimes.length; i++){
             if(selectedNeighborhood === 'All' || $scope.crimes[i][16] === selectedNeighborhood){
@@ -61,6 +67,7 @@ angular.module('crimeData', [])
                     if($scope.timeFilter === 'All' || $scope.timeFilter === 'Before' && selectedTime > $scope.crimes[i][9] || $scope.timeFilter === 'After' && selectedTime < $scope.crimes[i][9]){
                         buildCrimesPerDayChart($scope.crimes[i]);
                         buildMap($scope.crimes[i]);
+                        buildPieChartMonthly($scope.crimes[i]);
                     }
                 }
             }
@@ -70,7 +77,7 @@ angular.module('crimeData', [])
                 $scope.reload();
             }, 250);
         }
-
+        console.log($scope.selectedCrimesMonthly);
     }
     function buildCrimesPerDayChart(crime){
         if($scope.selectedCrimesPerDay[crime[8]]){
@@ -89,5 +96,15 @@ angular.module('crimeData', [])
             longitude = longitude.substring(0,7);
             $scope.points.push(new google.maps.LatLng(latitude, longitude));
         }
+    }
+    function buildPieChartMonthly(crime){
+        var key = parseInt(crime[8].substring(5,7));
+        if($scope.selectedCrimesMonthly[key]){
+            $scope.selectedCrimesMonthly[key]++;
+        }else{
+            $scope.selectedCrimesMonthly[key]=0;
+            $scope.selectedCrimesMonthly[key]++;
+        }
+
     }
 })

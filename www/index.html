@@ -34,6 +34,7 @@
     <script src="tableDirective.js"></script>
     <script src="paginationFilter.js"></script>
     <script src="filterFactory.js"></script>
+    <script src="pieChartDirective.js"></script>
 
 
 </head>
@@ -94,7 +95,7 @@
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
                                 <li><a href="#" ng-repeat="timeFilter in timeFilters" ng-click="setTimeFilter(timeFilter)">{{timeFilter}}</a></li>
                             </ul>
-                            <input type="time" ng-if="timeFilter!='All'" ng-model="time.value" required>
+                            <input type="time" ng-if="timeFilter!='All'" ng-model="time.value" ng-change="checkTime()" required>
                         </div>
                         <button type="button" class="btn btn-default" ng-click="setChangeGradient(!changeGradient)">Toggle Gradient Color</button>
                         <button type="button" class="btn btn-default" ng-click="resetDefault()">Reset Filters</button>
@@ -102,14 +103,23 @@
                 </div>
 
             </div>
-        </div>
-        <table-directive ng-if="crimes" selected-crimes="selectedCrimes"
-                                        page-size="10"
-                                        cur-page="curPage"
-                                    ></table-directive>
+            <div class="row">
+            <table-directive ng-if="crimes" selected-crimes="selectedCrimes"
+                                            page-size="10"
+                                            cur-page="curPage"
+                                            ></table-directive>
+            </div>
+            <div class="row">
+                <div class="col-md-8" id="graphWrapper">
+                    <graph-directive ng-if="crimes" crimes="crimes" selected-crimes-per-day="selectedCrimesPerDay" id="graph1">
+                    </graph-directive>
+                </div>
+                <div class="col-md-3" id="pieWrapper">
+                    <pie-chart-directive ng-if="selectedCrimesMonthly" selected-crimes-monthly="selectedCrimesMonthly" id="graph2"></pie-chart-directive>
+                </div>
+            </div>
 
-        <graph-directive ng-if="crimes" crimes="crimes" selected-crimes-per-day="selectedCrimesPerDay" id="graph1">
-        </graph-directive>
+        </div>
 
     </div>
 
