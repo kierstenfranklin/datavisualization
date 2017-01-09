@@ -1,3 +1,6 @@
+body{
+    background-color: #fcfcfc !important;
+}
 #map {
     height: 500px !important;
     display: inherit !important;
@@ -19,13 +22,12 @@
     margin-top: 60px;
 }
 #chart{
-	background-color: #F5F2EB;
+	background-color: #F9F9F9;
 	border: 1px solid #CCC;
 }
 #chart2{
-    background-color: #F5F2EB;
+    background-color: #F9F9F9;
 	border: 1px solid #CCC;
-    /*position: relative;*/
 }
 #graphWrapper{
     margin-right: 25px;
