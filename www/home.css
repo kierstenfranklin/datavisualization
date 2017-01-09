@@ -44,7 +44,7 @@
 }
 .trendline{
     fill:none;
-    stroke: #ccc;
+    stroke: url(#temperature-gradient);
     stroke-width: 3px;
 }
 .area{

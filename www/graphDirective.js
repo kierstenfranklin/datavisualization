@@ -4,7 +4,8 @@ angular.module('dataVisualization')
         replace: false,
         scope: {
             crimes: "=",
-            selectedCrimesPerDay: "="
+            selectedCrimesPerDay: "=",
+            changeGradient: "="
         },
         template : '<div></div>',
         link: function(scope, element, attrs){
@@ -37,7 +38,7 @@ angular.module('dataVisualization')
                 .range([0, width]);
             var y = d3.scaleLinear()
                 .domain([0, d3.max(d3.entries(scope.selectedCrimesPerDay), function(d){
-                return d.value;;
+                return d.value;
             })])
                 .range([height, 0]);
 
@@ -65,6 +66,24 @@ angular.module('dataVisualization')
             .y0(height)
             .y1(function(d){
                 return y(d.value);
+            });
+
+
+            scope.$watch("changeGradient", function(newValue, oldValue){
+                console.log("HERE");
+                if(scope.changeGradient === false){
+                    colors = {
+                        first: "#FF604A",
+                        second: "#F1F762",
+                        third: "#A1F75E"
+                    }
+                }else{
+                    colors = {
+                        first: "#FF604A",
+                        second:"#5D5DD4",
+                        third: "#66FCFF"
+                    }
+                }
             });
 
             function plot(params){
@@ -173,12 +192,50 @@ angular.module('dataVisualization')
             scope.$watch("selectedCrimesPerDay",function(newValue,oldValue) {
                 y = d3.scaleLinear()
                 .domain([0, d3.max(d3.entries(scope.selectedCrimesPerDay), function(d){
-                    return d.value;;
+                    return d.value;
                 })])
                 .range([height, 0]);
+
+                var max = d3.max(d3.entries(scope.selectedCrimesPerDay), function(d){
+                    return d.value;
+                });
+                var tickCount;
+                if(max >= 10){
+                    tickCount = 6;
+                }else{
+                    tickCount = max;
+                }
+
                 yAxis = d3.axisLeft()
                     .scale(y)
-                    .ticks(6);
+                    .ticks(tickCount)
+                    .tickFormat(d3.format("d"));
+
+
+                svg.append("linearGradient")
+                    .attr("id", "temperature-gradient")
+                    .attr("gradientUnits", "userSpaceOnUse")
+                    .attr("x1", 0).attr("y1", height)
+                    .attr("x2", 0).attr("y2", 0/*y(d3.min(d3.entries(scope.selectedCrimesPerDay), function(d){
+
+                        return d.value;
+                    }))*/)
+                    .selectAll("stop")
+                    .data([
+                        {offset: "0%", color: colors.third },
+                        {offset: "50%", color: colors.second },
+                        {offset: "100%", color: colors.first }
+                    ])
+                    .enter().append("stop")
+                    .attr("offset", function(d) { return d.offset; })
+                    .attr("stop-color", function(d) { return d.color; });
+
+                    console.log("gradient " + y(d3.min(d3.entries(scope.selectedCrimesPerDay), function(d){
+
+                        return d.value;
+                    })));
+                    console.log("gradient 2 " + height);
+
                     chart.selectAll('*').remove();
                 plot.call(chart, {
                     data: d3.entries(scope.selectedCrimesPerDay),

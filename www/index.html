@@ -111,7 +111,9 @@
             </div>
             <div class="row">
                 <div class="col-md-8" id="graphWrapper">
-                    <graph-directive ng-if="crimes" crimes="crimes" selected-crimes-per-day="selectedCrimesPerDay" id="graph1">
+                    <graph-directive ng-if="crimes" crimes="crimes"
+                                                    selected-crimes-per-day="selectedCrimesPerDay"
+                                                    change-gradient = "changeGradient" id="graph1">
                     </graph-directive>
                 </div>
                 <div class="col-md-3" id="pieWrapper">
