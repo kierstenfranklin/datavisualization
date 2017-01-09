@@ -19,15 +19,21 @@ angular.module("dataVisualization")
             w = width - margin.right- margin.left;
             var radius = Math.min(w, height) / 2;
             var donutWidth = 75;
-            var color = d3.scaleOrdinal(d3.schemeCategory20);
-            var sum = 0;
-            for(var i = 1; i < scope.selectedCrimesMonthly.length; i++){
-                sum = sum + scope.selectedCrimesMonthly[i];
+            var colors = {
+                first: "#FF604A",
+                second: "#F1F762",
+                third: "#A1F75E"
             }
+            //var colors = [ "#FF604A","#F1F762","#A1F75E"];
+
             var monthNames = ["January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         ];
-
+        var sum = 0;
+        for(var i = 1; i < scope.selectedCrimesMonthly.length; i++){
+            sum = sum + scope.selectedCrimesMonthly[i];
+        }
+        var color = createScale();
         var svg = d3.select("#pieWrapper").append("svg")
         .attr("width", width)
         .attr("height", height)
@@ -52,13 +58,15 @@ angular.module("dataVisualization")
         .attr("class", "count");
         tooltip.append("div")
         .attr("class", "percent");
+
         var path = svg.selectAll('path')
-        .data(pie(d3.entries(scope.selectedCrimesMonthly)))
-        .enter()
-        .append('path')
-        .attr('d', arc)
-        .attr('fill', function(d, i) {
-            return color(d.data.key);
+            .data(pie(d3.entries(scope.selectedCrimesMonthly)))
+            .enter()
+            .append('path')
+            .attr('d', arc)
+            .classed("path", true)
+            .attr('fill', function(d, i) {
+            return color(d.data.value);
         });
         path.on("mouseenter", function(d){
             var percent = Math.round(100 * d.data.value / sum);
@@ -78,6 +86,9 @@ angular.module("dataVisualization")
         scope.$watch("selectedCrimesMonthly",function(newValue,oldValue) {
             svg.selectAll('*').remove();
 
+            color = createScale();
+
+
 
             var sum = 0;
             for(var i = 1; i < scope.selectedCrimesMonthly.length; i++){
@@ -90,8 +101,9 @@ angular.module("dataVisualization")
             .enter()
             .append('path')
             .attr('d', arc)
+            .classed("path", true)
             .attr('fill', function(d, i) {
-                return color(d.data.key);
+                return color(d.data.value);
             });
             path.on("mouseenter", function(d){
                 var percent = Math.round(100 * d.data.value / sum);
@@ -118,6 +130,17 @@ angular.module("dataVisualization")
             console.log('height', margin.top/2);
         });
 
+        function createScale(){
+            var max = d3.max(d3.entries(scope.selectedCrimesMonthly), function(d){
+                return d.value;
+            });
+            console.log('max is', max);
+            var color = d3.scaleLinear()
+            .domain([0, max])
+            .range([colors.third, colors.second, colors.first]);
+
+            return color;
+        }
     }
 }
 });
