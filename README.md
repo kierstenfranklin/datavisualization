@@ -2,7 +2,7 @@
 
 ### Overview
 
-A single page AngularJS project displaying data from Baltimore Open Data.  
+A single page AngularJS project displaying data from Baltimore Open Data.  You can view the original data [here](https://data.baltimorecity.gov/Public-Safety/Violent-Crime-by-Day/yhtz-6wkc). 
 
 ### Setup
 

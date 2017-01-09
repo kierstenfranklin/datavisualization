@@ -1,16 +1,18 @@
 angular.module('crimeData', [])
 .controller('dataController', function($scope, $http, $filter, filterFactory, $timeout){
-
+    $scope.loading = true;
     $http.get('data/data.json').then(function(result){
         $scope.crimes = result.data.data;
         $scope.selectedCrimes = $scope.crimes;
         $scope.selectedCrimesPerDay = [];
         $scope.selectedCrimesMonthly = [];
         $scope.updateCrimes();
+        $scope.loading = false;
     });
     $scope.neighborhoods = filterFactory.getNeighborhoods();
     $scope.crimeTypes = filterFactory.getCrimeTypes();
     $scope.timeFilters = filterFactory.getTimeFilters();
+    $scope.gradientString = "green";
 
     $scope.setDefault=function(){
         $scope.neighborhood = $scope.neighborhoods[0];
@@ -42,17 +44,20 @@ angular.module('crimeData', [])
     }
     $scope.setChangeGradient=function(changeGradient){
         $scope.changeGradient = changeGradient;
+        if(!$scope.changeGradient){
+            $scope.gradientString = "green";
+        }else{
+            $scope.gradientString = "blue";
+        }
         $scope.updateCrimes();
     }
     $scope.reloadMap = function(method){
         $scope.reload = method;
     }
     $scope.checkTime = function() {
-        console.log($scope.time);
         $scope.updateCrimes();
     }
     $scope.updateCrimes=function(){
-        console.log($scope.neighborhood);
         $scope.curPage.value=0;
         $scope.noResultsFound = false;
         var selectedTime = $filter('date')($scope.time.value, "HH:mm:ss");
@@ -76,12 +81,11 @@ angular.module('crimeData', [])
         if($scope.reload){
             $timeout(function(){
                 $scope.reload();
-            }, 250);
+            }, 50);
         }
         if(!$scope.selectedCrimes[0]){
             $scope.noResultsFound = true;
         }
-        console.log($scope.selectedCrimesMonthly);
     }
     function buildCrimesPerDayChart(crime){
         if($scope.selectedCrimesPerDay[crime[8]]){
@@ -109,6 +113,6 @@ angular.module('crimeData', [])
             $scope.selectedCrimesMonthly[key]=0;
             $scope.selectedCrimesMonthly[key]++;
         }
-
     }
+
 })

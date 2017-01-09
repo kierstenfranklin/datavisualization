@@ -61,3 +61,12 @@
     border-top-width: 0;
     border-bottom: 4px solid #000000;
 }
+.loading-area{
+    position: absolute;
+    background: black;
+    height: 100%;
+    width: 100%;
+    opacity: .45;
+    z-index: 1000;
+    overflow: hidden;
+}

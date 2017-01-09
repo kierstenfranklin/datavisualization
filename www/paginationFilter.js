@@ -1,5 +1,5 @@
 angular.module("dataVisualization")
-.filter('pagination', function(){
+.filter("pagination", function(){
      return function(input, start){
       start = +start;
       if(input){

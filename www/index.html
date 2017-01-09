@@ -46,6 +46,9 @@
         </div>
     </nav>
     <div ng-controller="dataController" class="main-display">
+        <div ng-if="loading" class="loading-area">
+                <h1 class="text-center">Loading</h1>
+        </div>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-7">
@@ -61,14 +64,15 @@
                 <div class="description-map">
                     <h4>Concentration of Violent Crime in Baltimore</h4>
                     <p>This map shows the distribution of violent crime in Baltimore from December 2015 through November 2016.  Areas with a higher concentration of
-                        crimes appear in red, and areas with a lower concentration are seen in green.  Use the filters below to narrow the crimes by neighborhood, type of crime, or time of day.</p>
+                        crimes appear in red, and areas with a lower concentration are seen in {{gradientString}}.  Use the filters below to narrow the crimes by neighborhood, type of crime, or time of day.</p>
                         <p>Total Crimes Reported: {{selectedCrimes.length}}</p>
                     </div>
+                    <form name="filter">
                     <div class="filters">
                         <h4>Filter Results: </h4>
                         <div class="dropdown">
                             <h5 class="inline-element">Neighborhood: </h5>
-                            <button class="btn btn-default dropdown-toggle inline-element" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <button class="btn btn-default btn-sm dropdown-toggle inline-element" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 {{neighborhood.name}}
                                 <span class="caret"></span>
                             </button>
@@ -78,7 +82,7 @@
                         </div>
                         <div class="dropdown">
                             <h5 class="inline-element">Type of Crime: </h5>
-                            <button class="btn btn-default dropdown-toggle inline-element" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <button class="btn btn-default btn-sm dropdown-toggle inline-element" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 {{crimeType}}
                                 <span class="caret"></span>
                             </button>
@@ -88,21 +92,28 @@
                         </div>
                         <div class="dropdown">
                             <h5 class="inline-element">Time: </h5>
-                            <button class="btn btn-default dropdown-toggle inline-element" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <button class="btn btn-default btn-sm dropdown-toggle inline-element" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 {{timeFilter}}
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
                                 <li><a href="#" ng-repeat="timeFilter in timeFilters" ng-click="setTimeFilter(timeFilter)">{{timeFilter}}</a></li>
                             </ul>
-                            <input type="time" ng-if="timeFilter!='All'" ng-model="time.value" ng-change="checkTime()" required>
+                            <input name="time" type="time" ng-if="timeFilter!='All'" ng-model="time.value" ng-change="checkTime()" required>
+
+                            <div ng-if="timeFilter != 'All' && !filter.time.$valid" class="alert alert-danger">
+                                <p>Not a valid time</p>
+                            </div>
                         </div>
-                        <button type="button" class="btn btn-default" ng-click="setChangeGradient(!changeGradient)">Toggle Gradient Color</button>
-                        <button type="button" class="btn btn-default" ng-click="resetDefault()">Reset Filters</button>
-                        <div ng-if="noResultsFound" class="alert alert-info">
+                        <button type="button" class="btn" ng-class="{ 'btn-success': changeGradient, 'btn-info': !changeGradient }" ng-click="setChangeGradient(!changeGradient)">Toggle Gradient Color</button>
+                        <br><br>
+                        <button type="button" class="btn btn-danger" ng-click="resetDefault()">Reset Filters</button>
+                        <br><br>
+                        <div ng-if="noResultsFound && timeFilter=='All' || noResultsFound && timeFilter != 'All' && filter.time.$valid" class="alert alert-warning">
                             <p>No results found</p>
                         </div>
                     </div>
+                </form>
                 </div>
 
             </div>
@@ -120,7 +131,7 @@
                     </graph-directive>
                 </div>
                 <div class="col-md-3" id="pieWrapper">
-                    <pie-chart-directive ng-if="selectedCrimesMonthly" selected-crimes-monthly="selectedCrimesMonthly" id="graph2"></pie-chart-directive>
+                    <pie-chart-directive ng-if="selectedCrimesMonthly" selected-crimes-monthly="selectedCrimesMonthly" change-gradient="changeGradient" id="graph2"></pie-chart-directive>
                 </div>
             </div>
 

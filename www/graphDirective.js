@@ -1,5 +1,5 @@
-angular.module('dataVisualization')
-.directive('graphDirective', function(){
+angular.module("dataVisualization")
+.directive("graphDirective", function(){
     return {
         replace: false,
         scope: {
@@ -7,7 +7,7 @@ angular.module('dataVisualization')
             selectedCrimesPerDay: "=",
             changeGradient: "="
         },
-        template : '<div></div>',
+        template : "<div></div>",
         link: function(scope, element, attrs){
             var wrapperDiv = document.getElementById("graphWrapper");
             var w = wrapperDiv.clientWidth;
@@ -70,7 +70,6 @@ angular.module('dataVisualization')
 
 
             scope.$watch("changeGradient", function(newValue, oldValue){
-                console.log("HERE");
                 if(scope.changeGradient === false){
                     colors = {
                         first: "#FF604A",
@@ -190,6 +189,10 @@ angular.module('dataVisualization')
                 }
             });
             scope.$watch("selectedCrimesPerDay",function(newValue,oldValue) {
+                redraw();
+            });
+
+            function redraw(){
                 y = d3.scaleLinear()
                 .domain([0, d3.max(d3.entries(scope.selectedCrimesPerDay), function(d){
                     return d.value;
@@ -216,10 +219,7 @@ angular.module('dataVisualization')
                     .attr("id", "temperature-gradient")
                     .attr("gradientUnits", "userSpaceOnUse")
                     .attr("x1", 0).attr("y1", height)
-                    .attr("x2", 0).attr("y2", 0/*y(d3.min(d3.entries(scope.selectedCrimesPerDay), function(d){
-
-                        return d.value;
-                    }))*/)
+                    .attr("x2", 0).attr("y2", 0)
                     .selectAll("stop")
                     .data([
                         {offset: "0%", color: colors.third },
@@ -230,13 +230,8 @@ angular.module('dataVisualization')
                     .attr("offset", function(d) { return d.offset; })
                     .attr("stop-color", function(d) { return d.color; });
 
-                    console.log("gradient " + y(d3.min(d3.entries(scope.selectedCrimesPerDay), function(d){
 
-                        return d.value;
-                    })));
-                    console.log("gradient 2 " + height);
-
-                    chart.selectAll('*').remove();
+                chart.selectAll("*").remove();
                 plot.call(chart, {
                     data: d3.entries(scope.selectedCrimesPerDay),
                     axis: {
@@ -244,9 +239,10 @@ angular.module('dataVisualization')
                         y: yAxis
                     }
                 });
-            });
+            }
 
         }
+
 
     }
 
