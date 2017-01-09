@@ -99,6 +99,9 @@
                         </div>
                         <button type="button" class="btn btn-default" ng-click="setChangeGradient(!changeGradient)">Toggle Gradient Color</button>
                         <button type="button" class="btn btn-default" ng-click="resetDefault()">Reset Filters</button>
+                        <div ng-if="noResultsFound" class="alert alert-info">
+                            <p>No results found</p>
+                        </div>
                     </div>
                 </div>
 
@@ -120,6 +123,7 @@
                     <pie-chart-directive ng-if="selectedCrimesMonthly" selected-crimes-monthly="selectedCrimesMonthly" id="graph2"></pie-chart-directive>
                 </div>
             </div>
+
 
         </div>
 

@@ -54,6 +54,7 @@ angular.module('crimeData', [])
     $scope.updateCrimes=function(){
         console.log($scope.neighborhood);
         $scope.curPage.value=0;
+        $scope.noResultsFound = false;
         var selectedTime = $filter('date')($scope.time.value, "HH:mm:ss");
         var selectedNeighborhood = $scope.neighborhood.name;
         var selectedCrimeType = $scope.crimeType.toUpperCase();
@@ -76,6 +77,9 @@ angular.module('crimeData', [])
             $timeout(function(){
                 $scope.reload();
             }, 250);
+        }
+        if(!$scope.selectedCrimes[0]){
+            $scope.noResultsFound = true;
         }
         console.log($scope.selectedCrimesMonthly);
     }
